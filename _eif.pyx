@@ -78,5 +78,11 @@ cdef class iForest:
             self.thisptr.predictSingleTree (<double*> np.PyArray_DATA(S), <double*> np.PyArray_DATA(X_in), X_in.shape[0], tree_index)
         return S
 
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def rebuild_tree (self, np.ndarray[double, ndim=2] X_in, int tree_index):
+        self.size_X = X_in.shape[0]
+        self.thisptr.rebuildTree(<double*> np.PyArray_DATA(X), self.size_X, tree_index)
+
     def output_tree_nodes (self, int tree_index):
         self.thisptr.OutputTreeNodes (tree_index)

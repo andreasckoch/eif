@@ -373,6 +373,35 @@ void iForest::fit (double* X_in, int nobjs_in, int dim_in)
 
 }
 
+void iForest::rebuildTree (double* X_in, int nobjs_in, int tree_idx)
+{
+
+	X = X_in;
+	nobjs = nobjs_in;
+	// if (tree_idx < 0 or ntrees <= tree_idx ) return;
+	if (!CheckSampleSize ()) return;
+	if (!CheckExtensionLevel ()) return;
+
+	std::vector<double> Xsubset;
+
+	/* Select a random subset of X_in of size sample_in */
+	RANDOM_ENGINE random_engine (random_seed+tree_idx);
+	std::vector<int> sample_index = sample_without_replacement (sample, nobjs, random_engine);
+	Xsubset.clear();
+	for (int j=0; j<sample; j++)
+	{
+		for (int k=0; k<dim; k++)
+		{
+			int index = k+(sample_index[j]-1)*dim;
+			Xsubset.push_back(X[index]);
+		}
+	}
+
+	Trees[tree_idx].build_tree (&Xsubset[0], sample, 0, limit, dim, random_engine, exlevel);
+	
+
+}
+
 void iForest::predict (double* S, double* X_in=NULL, int size_in=0)
 {
 

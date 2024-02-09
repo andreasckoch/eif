@@ -5,4 +5,5 @@ cdef extern from "eif.hxx":
         void fit (double*, int, int)
         void predict (double*, double*, int)
         void predictSingleTree (double*, double*, int, int)
+        void rebuildTree (double*, int, int)
         void OutputTreeNodes (int)
